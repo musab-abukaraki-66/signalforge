@@ -47,3 +47,10 @@ mlartifacts/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Web app
+web/node_modules/
+web/.next/
+web/out/
+web/*.tsbuildinfo
+web/next-env.d.ts

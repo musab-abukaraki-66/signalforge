@@ -105,6 +105,13 @@ def cmd_train(args, config: ProjectConfig) -> None:
     print({k: str(v) for k, v in paths.items()})
 
 
+def cmd_export_web(args, config: ProjectConfig) -> None:
+    from signalforge.web_export import export_web
+
+    out = export_web(_connect(config), config.processed_dir, Path(args.out))
+    print(f"Wrote {out} ({out.stat().st_size / 1024:.0f} KB)")
+
+
 def cmd_dashboard(args, config: ProjectConfig) -> None:
     import os
     import subprocess
@@ -127,6 +134,9 @@ def main(argv: list[str] | None = None) -> int:
     demo.add_argument("--seed", type=int, default=7)
     demo.add_argument("--force", action="store_true", help="overwrite non-synthetic files")
     demo.set_defaults(fn=cmd_demo_data)
+    export = sub.add_parser("export-web", help="write the demo bundle for the public web app")
+    export.add_argument("--out", default="web/public/demo/demo-bundle.json")
+    export.set_defaults(fn=cmd_export_web)
     for name, fn, helptext in (
         ("verify-raw", cmd_verify_raw, "check real dataset files and record SHA-256 provenance"),
         ("build", cmd_build, "raw CSVs -> bronze/silver/gold, with quality checks"),

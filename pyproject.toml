@@ -57,6 +57,7 @@ ignore = ["B008"]
 [tool.ruff.lint.per-file-ignores]
 # Long SQL strings and dense UI/generator code stay readable on one line.
 "tests/**" = ["E501"]
+"web/e2e/*.py" = ["E501"]  # long Playwright assertions read better on one line
 "src/signalforge/analytics/*.py" = ["E501"]
 "src/signalforge/quality/checks.py" = ["E501"]
 "src/signalforge/dashboard/app.py" = ["E501"]
