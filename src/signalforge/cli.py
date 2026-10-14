@@ -36,9 +36,27 @@ def _connect(config: ProjectConfig) -> duckdb.DuckDBPyConnection:
 
 def cmd_demo_data(args, config: ProjectConfig) -> None:
     from signalforge.demo.synthetic import generate
+    from signalforge.schema import SYNTHETIC_MARKER, TABLES
 
+    expected = [t.file for t in TABLES if (config.raw_dir / t.file).exists()]
+    if expected and not (config.raw_dir / SYNTHETIC_MARKER).exists() and not args.force:
+        raise PipelineError(
+            f"{config.raw_dir} already holds non-synthetic dataset files; refusing to overwrite. "
+            "Point SIGNALFORGE_DATA_DIR at a different directory, or pass --force."
+        )
     counts = generate(config.raw_dir, n_orders=args.orders, seed=args.seed)
     print(f"Wrote SYNTHETIC demo CSVs to {config.raw_dir}: {counts}")
+
+
+def cmd_verify_raw(args, config: ProjectConfig) -> None:
+    from signalforge.ingestion.provenance import verify_raw
+
+    record = verify_raw(config.raw_dir, config.interim_dir / "raw_provenance.json")
+    for name, info in record["files"].items():
+        print(
+            f"{name}: {info['rows']} rows, {info['bytes']} bytes, sha256={info['sha256'][:16]}..."
+        )
+    print(f"Provenance written to {config.interim_dir / 'raw_provenance.json'}")
 
 
 def cmd_build(args, config: ProjectConfig) -> None:
@@ -107,8 +125,10 @@ def main(argv: list[str] | None = None) -> int:
     demo = sub.add_parser("demo-data", help="write SYNTHETIC Olist-style CSVs to data/raw")
     demo.add_argument("--orders", type=int, default=6000)
     demo.add_argument("--seed", type=int, default=7)
+    demo.add_argument("--force", action="store_true", help="overwrite non-synthetic files")
     demo.set_defaults(fn=cmd_demo_data)
     for name, fn, helptext in (
+        ("verify-raw", cmd_verify_raw, "check real dataset files and record SHA-256 provenance"),
         ("build", cmd_build, "raw CSVs -> bronze/silver/gold, with quality checks"),
         ("reconcile", cmd_reconcile, "compare gold KPIs with an independent pandas calculation"),
         ("report", cmd_report, "write the findings report"),

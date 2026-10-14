@@ -63,6 +63,7 @@ signalforge demo-data      # writes invented Olist-style CSVs to data/raw
 ### Run the pipeline
 
 ```bash
+signalforge verify-raw     # real data only: check files, record SHA-256 provenance
 signalforge build          # raw -> bronze/silver/gold + quality checks (fails loudly on bad input)
 signalforge reconcile      # gold KPIs vs an independent pandas calculation
 signalforge report         # data/processed/reports/findings.md

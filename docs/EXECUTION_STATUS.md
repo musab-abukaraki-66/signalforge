@@ -22,5 +22,8 @@ Last updated: 2026-10-14.
 - The geolocation file is not ingested (not needed yet).
 - No CI run observed yet (workflow updated but not pushed-and-run in this session unless noted in the final report).
 
+## Real-data validation attempt (2026-10-14)
+Blocked, not performed: no Kaggle CLI, no credentials, kaggle.com returns 403 from the egress policy. No real results exist. Added `signalforge verify-raw` (file/column/non-empty checks, SHA-256 provenance, rejects the synthetic marker) and a guard so `demo-data` cannot overwrite real files. Items still to verify on real data: review/order relationships, payment aggregation, undelivered/censored orders, KPI reconciliation populations, geolocation.
+
 ## Exact next task
-Obtain the real Olist CSVs into `data/raw/` (see `docs/DATASET_SETUP.md`), run `signalforge build`, fix any schema or check failures that real data exposes, then re-run `reconcile`, `report` and `train` and review the real results.
+Follow the manual steps in `docs/DATASET_SETUP.md` to put the real Olist CSVs in a separate data dir, run `signalforge verify-raw`, then `signalforge build`, fix any schema or check failures that real data exposes, then re-run `reconcile`, `report` and `train` and review the real results.

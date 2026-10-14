@@ -27,23 +27,27 @@ Verified from public descriptions:
 
 Column-level schemas are **not** asserted here. They are confirmed and recorded during milestone 2 by reading the downloaded files.
 
-## Status in this repository
+## Attribution and licence
 
-The real files were **not downloaded** in the build session: the sandbox egress proxy refused `kaggle.com` (HTTP 403). The pipeline was therefore developed and tested against a seeded synthetic generator that reproduces the table layout (`signalforge demo-data`). Synthetic runs write a marker file (`data/raw/_SYNTHETIC_DEMO.txt`) so the warehouse, report and dashboard label themselves as synthetic.
+- **Dataset:** Brazilian E-Commerce Public Dataset by Olist, <https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce>.
+- **Licence:** CC BY-NC-SA 4.0, as stated by the project owner. It was not independently confirmed from this environment (Kaggle was unreachable); read the licence on the Kaggle page.
+- **Consequences:** attribution to Olist is required; **non-commercial use only** (CC BY-NC-SA does not permit commercial use); derivatives must be shared under the same licence. Any commercial deployment needs permission from Olist or a commercially licensed alternative dataset. The MIT licence of this repository covers code only and transfers no dataset rights. Raw data and rows are never committed.
 
-## Licensing (must be checked before use)
+## Required files (all checked by `signalforge verify-raw`)
 
-Read the licence on the Kaggle dataset page yourself before using or redistributing anything derived from the data. See the note at the end of this file for what research could and could not confirm. Do not commit the data or publish raw rows. This repository's MIT licence covers the code only and does not transfer any dataset rights.
+`olist_orders_dataset.csv`, `olist_order_items_dataset.csv`, `olist_order_payments_dataset.csv`, `olist_order_reviews_dataset.csv`, `olist_customers_dataset.csv`, `olist_sellers_dataset.csv`, `olist_products_dataset.csv`, `product_category_name_translation.csv`. The ninth file, `olist_geolocation_dataset.csv`, is optional and currently unused. Required columns are listed in `src/signalforge/schema.py`; they follow the public description and are **unconfirmed against the real headers** until a real load is done.
 
-## Reproducible setup
+## Status
 
-1. Create a free Kaggle account and accept the dataset terms.
-2. Download the archive from the page above (or `kaggle datasets download -d olistbr/brazilian-ecommerce -p data/raw --unzip`, with the API token kept outside the repository).
-3. Place the CSV files in `data/raw/` (git-ignored). The geolocation file is optional and currently unused.
-4. Remove `data/raw/_SYNTHETIC_DEMO.txt` if it exists, then run `signalforge build`. The build records file hashes, sizes and row counts in `data/interim/bronze_manifest.json`.
+**Real data has not been loaded.** Attempts to reach kaggle.com failed (HTTP 403 from the environment's egress policy) and no Kaggle CLI or credentials exist in the workspace. All runs so far use the seeded synthetic generator (`signalforge demo-data`), which writes `data/raw/_SYNTHETIC_DEMO.txt` so every output is labelled synthetic.
 
-No synthetic demo yet? `signalforge demo-data` writes invented data with the same layout.
+## Acquire the real data (manual)
 
-## Research note (licence and schema)
+1. In the cloud environment settings, allow outbound access to `kaggle.com` (Network access > Allowed domains), and add `KAGGLE_USERNAME` / `KAGGLE_KEY` as environment secrets (never paste them in chat). Alternatively download the archive on your own machine.
+2. Use a **separate data directory** so synthetic and real data never mix: `export SIGNALFORGE_DATA_DIR=/path/to/real-data`.
+3. `pip install kaggle && kaggle datasets download -d olistbr/brazilian-ecommerce -p $SIGNALFORGE_DATA_DIR/raw --unzip` (or unzip the manually downloaded archive there).
+4. `signalforge verify-raw` - checks the files, rejects the synthetic marker, writes SHA-256 hashes and row counts to `<data_dir>/interim/raw_provenance.json`.
+5. `signalforge build && signalforge reconcile && signalforge report && signalforge train`.
+6. Expect to fix schema or check failures on first real load; do not relax a check without recording the business reason in `docs/EXECUTION_STATUS.md`.
 
-A bounded search could not reach kaggle.com, so the **licence is unverified**: no primary source was read, and no secondhand source quoted a licence field. Treat the dataset as "terms unknown until you read the Kaggle page". Secondhand sources list nine files and the misspelt column `product_name_lenght`; neither was confirmed against real headers (ingestion checks them on first real load). Olist describes the data as real, anonymised commercial data (about 100k orders, 2016-2018).
+`signalforge demo-data` refuses to write into a directory that holds non-synthetic dataset files (unless `--force`).
