@@ -6,7 +6,7 @@ SIGNALFORGE is an end-to-end e-commerce intelligence platform: Data Engineering,
 
 ![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white) ![License: MIT (code only)](https://img.shields.io/badge/license-MIT%20(code)-green) ![Status: working vertical slice](https://img.shields.io/badge/status-working%20slice-teal)
 
-> **Honest status.** The full pipeline runs end to end, but **only on a seeded synthetic dataset** that mimics the Olist table layout. The real Olist files could not be downloaded when this was built (see [docs/DATASET_SETUP.md](docs/DATASET_SETUP.md)). Every number produced from synthetic data describes the generator, not a real business, and the warehouse, report and dashboard label it as such. The GitHub repository is still named `DATASCOPE`; renaming it is a manual step (Settings > General > Repository name).
+> **Honest status.** The full pipeline runs end to end, but **only on a seeded synthetic dataset** that mimics the Olist table layout. The real Olist files could not be downloaded when this was built (see [docs/DATASET_SETUP.md](docs/DATASET_SETUP.md)). Every number produced from synthetic data describes the generator, not a real business, and the warehouse, report and dashboard label it as such.
 
 ## Public web app (try it, no install)
 
@@ -67,7 +67,7 @@ Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/DATA_MODEL.md](docs
 ## Getting started
 
 ```bash
-git clone https://github.com/musab-abukaraki-66/DATASCOPE.git && cd DATASCOPE
+git clone https://github.com/musab-abukaraki-66/signalforge.git && cd signalforge
 python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
 python -m pip install -e ".[dev]"
 cp configs/project.example.yaml configs/project.yaml  # optional; the example works as-is

@@ -19,7 +19,7 @@ Last updated: 2026-10-14.
 - CI workflow now triggers on every push (it previously only ran on main/PRs, so it had never run on this branch).
 - Real data: still not acquired. Additional official hosts tried this round (archive-beta.ics.uci.edu, uci-ics-mlr-prod.aws.uci.edu): 403. No cached copy on disk. No retail-profile pivot was built (nothing to validate it against).
 - Screenshots in `docs/screenshots/` are of the synthetic demo and say so.
-- Repo rename: no rename tool is available to this session; manual (GitHub Settings > General).
+- Repo renamed by the owner to `musab-abukaraki-66/signalforge` (old `DATASCOPE` URLs redirect).
 
 ## Public web app and deployment (2026-10-14)
 - `web/` Next.js 16 + TypeScript app: landing, live demo (6 sections, filters, decision room, forecast), CSV analyzer (parser, profiler, role-guided analysis, baselines, report/cleaned exports), methods page. Static prerender, security headers (CSP, no third-party loads), no backend.
