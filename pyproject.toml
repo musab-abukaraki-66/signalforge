@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "datascope"
+version = "0.1.0"
+description = "DataScope: an end-to-end commerce intelligence platform, from raw data to real decisions."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Musab AbuKaraki" }]
+keywords = ["data-engineering", "analytics", "business-intelligence", "decision-intelligence", "duckdb"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+]
+# Runtime dependencies are limited to what the foundation actually imports.
+dependencies = [
+    "duckdb>=1.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+# Added when the milestone that needs them begins (see docs/ROADMAP.md).
+data = ["pandas>=2.2", "pyarrow>=15"]
+ml = ["scikit-learn>=1.4", "mlflow>=2.12"]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]

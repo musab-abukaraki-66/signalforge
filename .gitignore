@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Secrets and local config
+.env
+.env.*
+!.env.example
+configs/project.yaml
+
+# Data: never commit datasets or local databases (keep the .gitkeep placeholders)
+data/raw/*
+data/interim/*
+data/processed/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+*.duckdb
+*.duckdb.wal
+*.sqlite
+*.sqlite3
+*.parquet
+*.csv
+!tests/**/*.csv
+
+# Notebooks and experiment tracking artifacts
+.ipynb_checkpoints/
+mlruns/
+mlartifacts/
+
+# Power BI local caches (the .pbip project itself may be committed)
+*.pbix
+.pbi/
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
