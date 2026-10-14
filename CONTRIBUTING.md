@@ -1,4 +1,4 @@
-# Contributing to DataScope
+# Contributing to SIGNALFORGE
 
 ## Setup
 

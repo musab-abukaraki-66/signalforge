@@ -1,7 +1,7 @@
 """Project configuration loading.
 
 Configuration lives in a YAML file (see ``configs/project.example.yaml``). The data
-directory can be overridden with the ``DATASCOPE_DATA_DIR`` environment variable so the
+directory can be overridden with the ``SIGNALFORGE_DATA_DIR`` environment variable so the
 same config works on a laptop and in CI.
 """
 
@@ -13,7 +13,7 @@ from pathlib import Path
 
 import yaml
 
-DATA_DIR_ENV = "DATASCOPE_DATA_DIR"
+DATA_DIR_ENV = "SIGNALFORGE_DATA_DIR"
 REQUIRED_KEYS = ("project_name", "dataset", "data_dir", "database_path")
 
 

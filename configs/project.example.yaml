@@ -1,5 +1,5 @@
 # Copy to configs/project.yaml (git-ignored) and adjust. Paths are relative to the repo root.
-project_name: datascope
+project_name: signalforge
 dataset: olist-brazilian-ecommerce
 data_dir: data
-database_path: data/processed/datascope.duckdb
+database_path: data/processed/signalforge.duckdb

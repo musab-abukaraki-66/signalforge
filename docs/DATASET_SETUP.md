@@ -27,31 +27,23 @@ Verified from public descriptions:
 
 Column-level schemas are **not** asserted here. They are confirmed and recorded during milestone 2 by reading the downloaded files.
 
+## Status in this repository
+
+The real files were **not downloaded** in the build session: the sandbox egress proxy refused `kaggle.com` (HTTP 403). The pipeline was therefore developed and tested against a seeded synthetic generator that reproduces the table layout (`signalforge demo-data`). Synthetic runs write a marker file (`data/raw/_SYNTHETIC_DEMO.txt`) so the warehouse, report and dashboard label themselves as synthetic.
+
 ## Licensing (must be checked before use)
 
-The licence is shown on the Kaggle dataset page and **was not verified when this document was written**. Before using or redistributing anything derived from the data:
-
-1. Open the dataset page and read the stated licence and terms.
-2. Respect any non-commercial, attribution or share-alike conditions.
-3. Do not commit the data or publish raw rows. This repository's MIT licence applies to the code only.
+Read the licence on the Kaggle dataset page yourself before using or redistributing anything derived from the data. See the note at the end of this file for what research could and could not confirm. Do not commit the data or publish raw rows. This repository's MIT licence covers the code only and does not transfer any dataset rights.
 
 ## Reproducible setup
 
 1. Create a free Kaggle account and accept the dataset terms.
-2. Download the dataset archive from the page above.
-3. Unzip the nine CSV files into `data/raw/` (git-ignored).
-4. Record the file names, sizes and SHA-256 hashes in a local manifest. Ingestion (milestone 2) will automate this.
-5. Never commit files from `data/`.
+2. Download the archive from the page above (or `kaggle datasets download -d olistbr/brazilian-ecommerce -p data/raw --unzip`, with the API token kept outside the repository).
+3. Place the CSV files in `data/raw/` (git-ignored). The geolocation file is optional and currently unused.
+4. Remove `data/raw/_SYNTHETIC_DEMO.txt` if it exists, then run `signalforge build`. The build records file hashes, sizes and row counts in `data/interim/bronze_manifest.json`.
 
-Using the Kaggle CLI instead (needs an API token stored outside the repository, never in git):
+No synthetic demo yet? `signalforge demo-data` writes invented data with the same layout.
 
-```bash
-kaggle datasets download -d olistbr/brazilian-ecommerce -p data/raw --unzip
-```
+## Research note (licence and schema)
 
-## Known caveats to investigate in milestone 2
-
-- Customer identifiers: confirm which id is per order and which identifies a returning customer.
-- Orders can have multiple payment rows and multiple reviews.
-- Order status values and missing delivery dates for non-delivered orders.
-- The dataset has no cost, commission or profit data (see [BUSINESS_METRICS.md](BUSINESS_METRICS.md)).
+A bounded search could not reach kaggle.com, so the **licence is unverified**: no primary source was read, and no secondhand source quoted a licence field. Treat the dataset as "terms unknown until you read the Kaggle page". Secondhand sources list nine files and the misspelt column `product_name_lenght`; neither was confirmed against real headers (ingestion checks them on first real load). Olist describes the data as real, anonymised commercial data (about 100k orders, 2016-2018).

@@ -1,6 +1,6 @@
 # Decision methodology
 
-Every output of DataScope is labelled as exactly one of the following.
+Every output of SIGNALFORGE is labelled as exactly one of the following.
 
 | Type | Question answered | Evidence needed | Wording |
 |---|---|---|---|

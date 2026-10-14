@@ -1,4 +1,4 @@
-"""DataScope: an end-to-end commerce intelligence platform.
+"""SIGNALFORGE: an end-to-end commerce intelligence platform.
 
 From raw data to real decisions. See ``docs/ROADMAP.md`` for what is implemented
 and what is planned.

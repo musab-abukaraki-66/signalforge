@@ -30,3 +30,10 @@ jobs:
         run: ruff format --check .
       - name: Tests
         run: pytest
+      - name: End-to-end smoke run on synthetic data
+        run: |
+          signalforge demo-data --orders 1500
+          signalforge build
+          signalforge reconcile
+          signalforge report
+          signalforge train

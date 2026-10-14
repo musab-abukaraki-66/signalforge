@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from datascope.config import DATA_DIR_ENV, ConfigError, load_config
+from signalforge.config import DATA_DIR_ENV, ConfigError, load_config
 
 EXAMPLE = Path(__file__).resolve().parents[2] / "configs" / "project.example.yaml"
 
@@ -10,7 +10,7 @@ EXAMPLE = Path(__file__).resolve().parents[2] / "configs" / "project.example.yam
 def test_example_config_loads(monkeypatch):
     monkeypatch.delenv(DATA_DIR_ENV, raising=False)
     config = load_config(EXAMPLE)
-    assert config.project_name == "datascope"
+    assert config.project_name == "signalforge"
     assert config.raw_dir == Path("data") / "raw"
     assert config.processed_dir == Path("data") / "processed"
 
