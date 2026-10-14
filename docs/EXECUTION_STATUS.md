@@ -25,5 +25,16 @@ Last updated: 2026-10-14.
 ## Real-data validation attempt (2026-10-14)
 Blocked, not performed: no Kaggle CLI, no credentials, kaggle.com returns 403 from the egress policy. No real results exist. Added `signalforge verify-raw` (file/column/non-empty checks, SHA-256 provenance, rejects the synthetic marker) and a guard so `demo-data` cannot overwrite real files. Items still to verify on real data: review/order relationships, payment aggregation, undelivered/censored orders, KPI reconciliation populations, geolocation.
 
+## Real-data acquisition attempts (2026-10-14, recovery task)
+Outcome: **neither official dataset acquired; no real-data validation done.** Every attempt failed at the environment egress proxy (HTTP 403 on CONNECT), not at the source:
+1. Olist, official Kaggle page and API download URL: 403. No Kaggle CLI, no `~/.kaggle`, no Kaggle credentials in the environment.
+2. UCI Online Retail, official dataset page `archive.ics.uci.edu/dataset/352/online+retail`: 403.
+3. UCI static download endpoint `archive.ics.uci.edu/static/public/352/online+retail.zip`: 403.
+4. `ucimlrepo` package (installed from PyPI, which is reachable) calling the same UCI host: `ConnectionError`.
+No mirrors were tried (provenance and licence cannot be verified). The UCI profile (retail sales semantics, forecasting instead of late delivery) was deliberately NOT built without data to validate it against.
+
+## Unblock (one setting, then re-run the recovery prompt)
+Environment settings > Network access > add `kaggle.com` and `archive.ics.uci.edu` under Allowed domains (https://code.claude.com/docs/en/cloud-environments#network-access). For Olist also add `KAGGLE_USERNAME` / `KAGGLE_KEY` as environment secrets. With UCI allowed, no credentials are needed. Alternative: place either official archive in the workspace.
+
 ## Exact next task
 Follow the manual steps in `docs/DATASET_SETUP.md` to put the real Olist CSVs in a separate data dir, run `signalforge verify-raw`, then `signalforge build`, fix any schema or check failures that real data exposes, then re-run `reconcile`, `report` and `train` and review the real results.
