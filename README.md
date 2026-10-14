@@ -8,7 +8,16 @@ SIGNALFORGE is an end-to-end e-commerce intelligence platform: Data Engineering,
 
 > **Honest status.** The full pipeline runs end to end, but **only on a seeded synthetic dataset** that mimics the Olist table layout. The real Olist files could not be downloaded when this was built (see [docs/DATASET_SETUP.md](docs/DATASET_SETUP.md)). Every number produced from synthetic data describes the generator, not a real business, and the warehouse, report and dashboard label it as such. The GitHub repository is still named `DATASCOPE`; renaming it is a manual step (Settings > General > Repository name).
 
-## See it
+## Public web app (try it, no install)
+
+`web/` is a Next.js + TypeScript app: a labelled synthetic demo (KPIs, filters, data quality, forecast, decision room) and an **in-browser CSV analyzer** (profile, quality flags, guided charts and findings, baselines, JSON/CSV export). Your CSV never leaves the browser: no upload endpoint, no analytics, nothing stored. See [web/README.md](web/README.md). Run locally with `cd web && npm ci && npm run dev`.
+
+**Live deployment: not yet.** The Vercel connector in the build environment could not create a project (HTTP 403), so no production URL exists. To deploy: Vercel dashboard > Add New Project > import `musab-abukaraki-66/DATASCOPE`, set Root Directory to `web`, and choose the branch that contains `web/` as the Production Branch (or merge it to `main`). No environment variables are needed.
+
+![Web landing](docs/screenshots/web-landing.png)
+![CSV analyzer](docs/screenshots/web-analyze.png)
+
+## See it (Streamlit analyst dashboard)
 
 Screenshots captured from the running app on **synthetic demo data** (not real findings):
 
@@ -107,7 +116,7 @@ Target: delivered later than the estimated date. Prediction time: order placemen
 
 ## Real data status
 
-Real Olist data has **not** been loaded: every official route attempted (Kaggle, and four UCI hosts or tools) was denied by this environment's network policy. The real-data path (`verify-raw`, hashes, provenance in the app's Data & quality tab) exists and is tested on structure only. CI: the workflow was widened to run on every push, but no run has been observed yet.
+Real Olist data has **not** been loaded: every official route attempted (Kaggle, and four UCI hosts or tools) was denied by this environment's network policy. The real-data path (`verify-raw`, hashes, provenance in the app's Data & quality tab) exists and is tested on structure only. CI runs on every push (Python lint/tests/smoke run, plus a web job: lint, typecheck, unit tests, build).
 
 ## Limitations
 

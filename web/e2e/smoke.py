@@ -217,10 +217,12 @@ def run(browser, label, viewport):
     short = write(tmp, "short.csv", "date,amount\n2024-01-01,5\n2024-01-02,6\n2024-01-03,7\n")
     page.get_by_role("button", name="Remove file / start over").click()
     page.set_input_files("#csv-file", short)
-    check(
-        f"{label}: short series declines to forecast",
-        page.get_by_text("at least 20 are needed").is_visible(),
-    )
+    try:
+        expect(page.get_by_text("at least 20 are needed")).to_be_visible(timeout=5000)
+        ok = True
+    except AssertionError:
+        ok = False
+    check(f"{label}: short series declines to forecast", ok)
 
     # other pages
     page.goto(BASE + "/methods")

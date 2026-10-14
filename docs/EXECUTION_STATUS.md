@@ -21,6 +21,12 @@ Last updated: 2026-10-14.
 - Screenshots in `docs/screenshots/` are of the synthetic demo and say so.
 - Repo rename: no rename tool is available to this session; manual (GitHub Settings > General).
 
+## Public web app and deployment (2026-10-14)
+- `web/` Next.js 16 + TypeScript app: landing, live demo (6 sections, filters, decision room, forecast), CSV analyzer (parser, profiler, role-guided analysis, baselines, report/cleaned exports), methods page. Static prerender, security headers (CSP, no third-party loads), no backend.
+- `signalforge export-web` exports the demo bundle; Vitest checks browser KPIs and decision-room outputs equal the Python values.
+- Verified locally: lint, typecheck, 31 unit tests, production build, 70/70 Playwright checks at 1440 px and 390 px (`web/e2e/smoke.py`).
+- Vercel: team has no projects; `create_project` and `create_git_project` both returned 403 (no permission to create projects). No deployment exists. Unblock: create the project in the Vercel dashboard (Root Directory `web`) or grant the connector project-creation rights, then deploy with `vercel --prod` from `web/`.
+
 ## Decisions
 - Real Olist data could not be downloaded here (egress proxy returns 403 for kaggle.com and huggingface.co). Everything was run on a seeded SYNTHETIC generator (`signalforge demo-data`); every artifact is labelled as synthetic. No real finding is claimed anywhere.
 - Source column names follow the public dataset description and are unconfirmed against the real files; ingestion fails loudly on a mismatch.
