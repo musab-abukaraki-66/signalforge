@@ -53,10 +53,16 @@ def load_config(path: str | Path) -> ProjectConfig:
     if missing:
         raise ConfigError(f"config is missing required keys: {', '.join(missing)}")
 
-    data_dir = Path(os.environ.get(DATA_DIR_ENV) or data["data_dir"])
+    override = os.environ.get(DATA_DIR_ENV)
+    data_dir = Path(override or data["data_dir"])
+    database_path = Path(data["database_path"])
+    if override:
+        # Keep the warehouse inside the overridden data dir so a real-data directory never
+        # shares (or overwrites) the synthetic demo warehouse.
+        database_path = data_dir / "processed" / database_path.name
     return ProjectConfig(
         project_name=str(data["project_name"]),
         dataset=str(data["dataset"]),
         data_dir=data_dir,
-        database_path=Path(data["database_path"]),
+        database_path=database_path,
     )

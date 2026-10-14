@@ -20,6 +20,12 @@ def test_env_overrides_data_dir(monkeypatch, tmp_path):
     assert load_config(EXAMPLE).data_dir == tmp_path
 
 
+def test_env_override_moves_the_database_with_the_data(monkeypatch, tmp_path):
+    monkeypatch.setenv(DATA_DIR_ENV, str(tmp_path))
+    cfg = load_config(EXAMPLE)
+    assert cfg.database_path == tmp_path / "processed" / "signalforge.duckdb"
+
+
 def test_missing_keys_are_reported(tmp_path):
     bad = tmp_path / "bad.yaml"
     bad.write_text("project_name: x\n", encoding="utf-8")

@@ -12,6 +12,15 @@ Last updated: 2026-10-14.
 - Power BI: documentation only, no `.pbix`.
 - Tests: `pytest` (38 passing), `ruff check` and `ruff format --check` clean.
 
+## Completion sprint (2026-10-14)
+- Added weekly demand forecast (`analytics/forecast.py`): chronological 8-week holdout, naive and 4-week-average baselines, damped-trend model, approximate intervals; dashboard reports ties/losses honestly.
+- Dashboard now has 8 views incl. Trends & forecast, Data & quality (live re-run of all 37 checks, lineage, provenance, last build) and Definitions & methods (model cards); new visual system, mobile layout, focus rings, reduced-motion support. Browser-checked at 1400 px and 390 px: no exceptions, no horizontal scroll.
+- Fixed: `SIGNALFORGE_DATA_DIR` now also moves the warehouse, so a real-data directory cannot overwrite the synthetic demo database.
+- CI workflow now triggers on every push (it previously only ran on main/PRs, so it had never run on this branch).
+- Real data: still not acquired. Additional official hosts tried this round (archive-beta.ics.uci.edu, uci-ics-mlr-prod.aws.uci.edu): 403. No cached copy on disk. No retail-profile pivot was built (nothing to validate it against).
+- Screenshots in `docs/screenshots/` are of the synthetic demo and say so.
+- Repo rename: no rename tool is available to this session; manual (GitHub Settings > General).
+
 ## Decisions
 - Real Olist data could not be downloaded here (egress proxy returns 403 for kaggle.com and huggingface.co). Everything was run on a seeded SYNTHETIC generator (`signalforge demo-data`); every artifact is labelled as synthetic. No real finding is claimed anywhere.
 - Source column names follow the public dataset description and are unconfirmed against the real files; ingestion fails loudly on a mismatch.

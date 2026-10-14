@@ -8,6 +8,18 @@ SIGNALFORGE is an end-to-end e-commerce intelligence platform: Data Engineering,
 
 > **Honest status.** The full pipeline runs end to end, but **only on a seeded synthetic dataset** that mimics the Olist table layout. The real Olist files could not be downloaded when this was built (see [docs/DATASET_SETUP.md](docs/DATASET_SETUP.md)). Every number produced from synthetic data describes the generator, not a real business, and the warehouse, report and dashboard label it as such. The GitHub repository is still named `DATASCOPE`; renaming it is a manual step (Settings > General > Repository name).
 
+## See it
+
+Screenshots captured from the running app on **synthetic demo data** (not real findings):
+
+| Overview | Trends & forecast |
+|---|---|
+| ![Overview](docs/screenshots/overview-synthetic.png) | ![Forecast](docs/screenshots/forecast-synthetic.png) |
+| **Decision Room** | **Data & quality** |
+| ![Decision Room](docs/screenshots/decision-room-synthetic.png) | ![Data and quality](docs/screenshots/data-quality-synthetic.png) |
+
+Mobile (390 px): ![Mobile overview](docs/screenshots/mobile-overview-synthetic.png)
+
 ## The problem
 
 Marketplace teams hold orders, payments, deliveries and reviews in separate tables. Headline numbers (revenue, order value, delivery performance) are often computed from inconsistent definitions, and dashboards rarely connect a finding to a defensible decision. SIGNALFORGE aims to show the full path: ingest raw data, validate it, model it, analyse it, visualise it, predict with it, and turn the result into decisions whose evidence and assumptions are explicit.
@@ -19,8 +31,8 @@ Marketplace teams hold orders, payments, deliveries and reviews in separate tabl
 | Discipline | What exists today | Status |
 |---|---|---|
 | **Data Engineering** | Bronze (raw text + hash manifest) -> Silver (typed) -> Gold (star schema) in DuckDB, Parquet export, 37 quality checks, atomic builds | Implemented |
-| **Business Analytics** | Single-definition KPIs, breakdowns, cohorts, findings report with definition / period / n / limitation, independent reconciliation | Implemented |
-| **Business Intelligence** | Streamlit dashboard (5 views + definitions); Power BI handoff docs | Dashboard implemented; no `.pbix` |
+| **Business Analytics** | Single-definition KPIs, breakdowns, cohorts, weekly demand forecast (backtest vs naive and moving-average baselines), findings report with definition / period / n / limitation, independent reconciliation | Implemented |
+| **Business Intelligence** | Streamlit dashboard, 8 views: Overview, Products, Delivery, Customers, Trends & forecast, Decision Room, Data & quality, Definitions & methods; Power BI handoff docs | Implemented; no `.pbix` |
 | **Machine Learning** | Late-delivery risk model: purchase-time features, chronological split, baselines, calibration, segment errors | Implemented (synthetic data only) |
 | **Decision Intelligence** | Decision Room: held-out evidence vs assumption-based what-ifs, no invented costs | Implemented |
 
@@ -92,6 +104,10 @@ Target: delivered later than the estimated date. Prediction time: order placemen
 | `dashboards/power-bi/` | Power BI handoff (model, DAX measures, page plan) |
 | `docs/` | Architecture, model, metrics, methodology, dataset setup, roadmap, execution status |
 | `tests/` | Unit and integration tests (synthetic fixtures, no download needed) |
+
+## Real data status
+
+Real Olist data has **not** been loaded: every official route attempted (Kaggle, and four UCI hosts or tools) was denied by this environment's network policy. The real-data path (`verify-raw`, hashes, provenance in the app's Data & quality tab) exists and is tested on structure only. CI: the workflow was widened to run on every push, but no run has been observed yet.
 
 ## Limitations
 

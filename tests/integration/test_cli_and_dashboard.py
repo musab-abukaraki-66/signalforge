@@ -38,4 +38,12 @@ def test_dashboard_renders_without_exceptions(warehouse, con, monkeypatch):
     at = AppTest.from_file(str(app), default_timeout=60).run()
     assert not at.exception, [e.value for e in at.exception]
     assert len(at.metric) >= 6
+    assert len(at.tabs) == 8
+    # provenance is visible and the synthetic label is shown
+    assert any("Synthetic demo" in m.value for m in at.markdown)
+    # a filter changes the Overview KPIs (dead-control guard)
+    before = [m.value for m in at.metric[:6]]
+    at.sidebar.multiselect[0].set_value(["SP"]).run()
+    assert not at.exception, [e.value for e in at.exception]
+    assert [m.value for m in at.metric[:6]] != before
     assert os.environ["SIGNALFORGE_DB"]
