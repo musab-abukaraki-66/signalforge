@@ -12,7 +12,7 @@ SIGNALFORGE is an end-to-end e-commerce intelligence platform: Data Engineering,
 
 `web/` is a Next.js + TypeScript app: a labelled synthetic demo (KPIs, filters, data quality, forecast, decision room) and an **in-browser CSV analyzer** (profile, quality flags, guided charts and findings, baselines, JSON/CSV export). Your CSV never leaves the browser: no upload endpoint, no analytics, nothing stored. See [web/README.md](web/README.md). Run locally with `cd web && npm ci && npm run dev`.
 
-**Live deployment: not yet.** The Vercel connector in the build environment could not create a project (HTTP 403), so no production URL exists. To deploy: Vercel dashboard > Add New Project > import `musab-abukaraki-66/DATASCOPE`, set Root Directory to `web`, and choose the branch that contains `web/` as the Production Branch (or merge it to `main`). No environment variables are needed.
+**Live deployment: not yet.** No Vercel project exists yet (the build environment's Vercel connector was denied permission to create one, HTTP 403). The repo is configured for Vercel Services via the root `vercel.json`: one public service, `web` (Next.js in `web/`), served at `/`. The Python pipeline and Streamlit dashboard are intentionally not deployed (no HTTP entrypoint; heavy dependencies), and nothing in the web app calls another service, so there are no bindings. To deploy: Vercel dashboard > Add New Project > import `musab-abukaraki-66/DATASCOPE` (leave Root Directory empty; `vercel.json` defines the service). No environment variables are needed.
 
 ![Web landing](docs/screenshots/web-landing.png)
 ![CSV analyzer](docs/screenshots/web-analyze.png)
