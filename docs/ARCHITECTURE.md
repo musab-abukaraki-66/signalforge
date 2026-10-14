@@ -11,9 +11,9 @@ flowchart TB
     end
     subgraph Pipeline
         I[ingestion] --> Q[quality]
-        Q --> ST[(staging)]
-        ST --> IM[intermediate]
-        IM --> M[(marts)]
+        Q --> ST[(bronze)]
+        ST --> IM[(silver)]
+        IM --> M[(gold)]
     end
     subgraph Consumers
         AN[analytics]
@@ -33,19 +33,20 @@ flowchart TB
 
 | Component | Responsibility | Location |
 |---|---|---|
-| Ingestion | Read raw files, record file hashes and row counts, write to the staging layer without altering values | `src/datascope/ingestion` |
-| Quality | Schema, null, uniqueness, referential and range checks; fail loudly with a report | `src/datascope/quality` |
-| Transformations | Orchestrate layered SQL; keep logic in SQL, not Python | `src/datascope/transformations`, `sql/` |
-| Analytics | KPI computation and validation against independent calculations | `src/datascope/analytics` |
-| Models | Feature building, training, evaluation (time-aware splits, baselines) | `src/datascope/models` |
-| Decision engine | Scenario analysis and recommendation records that carry evidence and assumptions | `src/datascope/decision_engine` |
+| Ingestion | Read raw files, record file hashes and row counts, write to the staging layer without altering values | `src/signalforge/ingestion` |
+| Quality | Schema, null, uniqueness, referential and range checks; fail loudly with a report | `src/signalforge/quality` |
+| Transformations | Orchestrate layered SQL; keep logic in SQL, not Python | `src/signalforge/transformations`, `sql/` |
+| Analytics | KPI computation and validation against independent calculations | `src/signalforge/analytics` |
+| Models | Feature building, training, evaluation (time-aware splits, baselines) | `src/signalforge/models` |
+| Decision engine | Scenario analysis and recommendation records that carry evidence and assumptions | `src/signalforge/decision_engine` |
 | Dashboard | Executive Power BI report over the marts | `dashboards/power-bi` |
 
 ## Layers
 
-- **staging:** one model per source table; types cast, names standardised, no business logic.
-- **intermediate:** joins and derived fields (for example delivery delay), still at an explicit grain.
-- **marts:** analytics-ready facts and dimensions; the only layer BI and models read.
+- **bronze:** raw CSV text loaded unchanged, with a SHA-256 / row-count manifest (`data/interim/bronze_manifest.json`).
+- **silver:** typed, de-duplicated tables (`sql/silver`); failed casts become NULL and are counted by quality checks.
+- **gold:** facts, dimensions and marts (`sql/gold`) with grain stated per table; the only layer analytics, the dashboard and models read.
+- **Dashboard:** Streamlit (`signalforge dashboard`); Power BI is handoff documentation only.
 
 ## Design decisions
 

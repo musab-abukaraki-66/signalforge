@@ -27,31 +27,27 @@ Verified from public descriptions:
 
 Column-level schemas are **not** asserted here. They are confirmed and recorded during milestone 2 by reading the downloaded files.
 
-## Licensing (must be checked before use)
+## Attribution and licence
 
-The licence is shown on the Kaggle dataset page and **was not verified when this document was written**. Before using or redistributing anything derived from the data:
+- **Dataset:** Brazilian E-Commerce Public Dataset by Olist, <https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce>.
+- **Licence:** CC BY-NC-SA 4.0, as stated by the project owner. It was not independently confirmed from this environment (Kaggle was unreachable); read the licence on the Kaggle page.
+- **Consequences:** attribution to Olist is required; **non-commercial use only** (CC BY-NC-SA does not permit commercial use); derivatives must be shared under the same licence. Any commercial deployment needs permission from Olist or a commercially licensed alternative dataset. The MIT licence of this repository covers code only and transfers no dataset rights. Raw data and rows are never committed.
 
-1. Open the dataset page and read the stated licence and terms.
-2. Respect any non-commercial, attribution or share-alike conditions.
-3. Do not commit the data or publish raw rows. This repository's MIT licence applies to the code only.
+## Required files (all checked by `signalforge verify-raw`)
 
-## Reproducible setup
+`olist_orders_dataset.csv`, `olist_order_items_dataset.csv`, `olist_order_payments_dataset.csv`, `olist_order_reviews_dataset.csv`, `olist_customers_dataset.csv`, `olist_sellers_dataset.csv`, `olist_products_dataset.csv`, `product_category_name_translation.csv`. The ninth file, `olist_geolocation_dataset.csv`, is optional and currently unused. Required columns are listed in `src/signalforge/schema.py`; they follow the public description and are **unconfirmed against the real headers** until a real load is done.
 
-1. Create a free Kaggle account and accept the dataset terms.
-2. Download the dataset archive from the page above.
-3. Unzip the nine CSV files into `data/raw/` (git-ignored).
-4. Record the file names, sizes and SHA-256 hashes in a local manifest. Ingestion (milestone 2) will automate this.
-5. Never commit files from `data/`.
+## Status
 
-Using the Kaggle CLI instead (needs an API token stored outside the repository, never in git):
+**Real data has not been loaded.** Attempts to reach kaggle.com failed (HTTP 403 from the environment's egress policy) and no Kaggle CLI or credentials exist in the workspace. All runs so far use the seeded synthetic generator (`signalforge demo-data`), which writes `data/raw/_SYNTHETIC_DEMO.txt` so every output is labelled synthetic.
 
-```bash
-kaggle datasets download -d olistbr/brazilian-ecommerce -p data/raw --unzip
-```
+## Acquire the real data (manual)
 
-## Known caveats to investigate in milestone 2
+1. In the cloud environment settings, allow outbound access to `kaggle.com` (Network access > Allowed domains), and add `KAGGLE_USERNAME` / `KAGGLE_KEY` as environment secrets (never paste them in chat). Alternatively download the archive on your own machine.
+2. Use a **separate data directory** so synthetic and real data never mix: `export SIGNALFORGE_DATA_DIR=/path/to/real-data`.
+3. `pip install kaggle && kaggle datasets download -d olistbr/brazilian-ecommerce -p $SIGNALFORGE_DATA_DIR/raw --unzip` (or unzip the manually downloaded archive there).
+4. `signalforge verify-raw` - checks the files, rejects the synthetic marker, writes SHA-256 hashes and row counts to `<data_dir>/interim/raw_provenance.json`.
+5. `signalforge build && signalforge reconcile && signalforge report && signalforge train`.
+6. Expect to fix schema or check failures on first real load; do not relax a check without recording the business reason in `docs/EXECUTION_STATUS.md`.
 
-- Customer identifiers: confirm which id is per order and which identifies a returning customer.
-- Orders can have multiple payment rows and multiple reviews.
-- Order status values and missing delivery dates for non-delivered orders.
-- The dataset has no cost, commission or profit data (see [BUSINESS_METRICS.md](BUSINESS_METRICS.md)).
+`signalforge demo-data` refuses to write into a directory that holds non-synthetic dataset files (unless `--force`).

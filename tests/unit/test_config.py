@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from datascope.config import DATA_DIR_ENV, ConfigError, load_config
+from signalforge.config import DATA_DIR_ENV, ConfigError, load_config
 
 EXAMPLE = Path(__file__).resolve().parents[2] / "configs" / "project.example.yaml"
 
@@ -10,7 +10,7 @@ EXAMPLE = Path(__file__).resolve().parents[2] / "configs" / "project.example.yam
 def test_example_config_loads(monkeypatch):
     monkeypatch.delenv(DATA_DIR_ENV, raising=False)
     config = load_config(EXAMPLE)
-    assert config.project_name == "datascope"
+    assert config.project_name == "signalforge"
     assert config.raw_dir == Path("data") / "raw"
     assert config.processed_dir == Path("data") / "processed"
 
@@ -18,6 +18,12 @@ def test_example_config_loads(monkeypatch):
 def test_env_overrides_data_dir(monkeypatch, tmp_path):
     monkeypatch.setenv(DATA_DIR_ENV, str(tmp_path))
     assert load_config(EXAMPLE).data_dir == tmp_path
+
+
+def test_env_override_moves_the_database_with_the_data(monkeypatch, tmp_path):
+    monkeypatch.setenv(DATA_DIR_ENV, str(tmp_path))
+    cfg = load_config(EXAMPLE)
+    assert cfg.database_path == tmp_path / "processed" / "signalforge.duckdb"
 
 
 def test_missing_keys_are_reported(tmp_path):

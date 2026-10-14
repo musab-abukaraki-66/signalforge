@@ -2,7 +2,6 @@ name: CI
 
 "on":
   push:
-    branches: [main]
   pull_request:
 
 permissions:
@@ -30,3 +29,32 @@ jobs:
         run: ruff format --check .
       - name: Tests
         run: pytest
+      - name: End-to-end smoke run on synthetic data
+        run: |
+          signalforge demo-data --orders 1500
+          signalforge build
+          signalforge reconcile
+          signalforge report
+          signalforge train
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Type check
+        run: npm run typecheck
+      - name: Unit tests (includes parity with the Python-computed demo bundle)
+        run: npm test
+      - name: Production build
+        run: npm run build

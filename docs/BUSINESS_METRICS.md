@@ -9,7 +9,7 @@
 | **Recognised revenue** | What the marketplace itself earns (for example commission or fees) under its accounting policy | commission and fee data, **not present in a public order dataset** |
 | **Profit** | Revenue minus costs | cost data, **not present** |
 
-These are not interchangeable and cannot be derived from the same fields. A public order dataset supports order value and GMV-style measures. It does **not** support revenue or profit unless commission and cost data exist. DataScope will say "GMV" or "order value" and never "revenue" or "profit" for these measures.
+These are not interchangeable and cannot be derived from the same fields. A public order dataset supports order value and GMV-style measures. It does **not** support revenue or profit unless commission and cost data exist. SIGNALFORGE will say "GMV" or "order value" and never "revenue" or "profit" for these measures.
 
 Also note: payment totals and item totals can differ (vouchers, installments, rounding), so reconcile and document the chosen source per metric.
 
